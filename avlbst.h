@@ -149,7 +149,36 @@ template<class Key, class Value>
 void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 {
     // TODO
-    
+ Node<Key, Value>* node = BinarySearchTree<Key, Value>::root_;
+
+    while (true) {
+        if (node == NULL) {
+          Node<Key, Value>* newNode = new Node<Key, Value>(new_item.first, new_item.second, NULL);
+          BinarySearchTree<Key, Value>::root_ = newNode;
+          return;
+        }
+
+        else if (node->getKey() == new_item.first) {
+            node->setValue(new_item.second);
+            return;
+        }
+        else if (new_item.first < node->getKey()) {
+            if (node->getLeft() == NULL) {
+                Node<Key, Value>* newNode = new Node<Key, Value>(new_item.first, new_item.second, node);
+                node->setLeft(newNode);
+                return;
+            }
+            node = node->getLeft();
+        }
+        else if (new_item.first > node->getKey()) {
+            if (node->getRight() == NULL) {
+                Node<Key, Value>* newNode = new Node<Key, Value>(new_item.first, new_item.second, node);
+                node->setRight(newNode);
+                return;
+            }
+            node = node->getRight();
+        }
+    }    
 }
 
 /*
@@ -160,6 +189,98 @@ template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
     // TODO
+    /*AVLNode<Key, Value>* node = BinarySearchTree<Key, Value>::root_;
+    while (true) {
+        if (node == NULL) {
+          return;
+        }
+        else if (key == node->getKey()) {
+            //case 0: 0 children
+            if (node->getLeft() == NULL && node->getRight() == NULL) {
+              if (node->getParent() != NULL) {
+                if (node->getParent()->getLeft() == node) {
+                  node->getParent()->setLeft(NULL);
+                  node->setParent(NULL);
+                }
+                else {
+                  node->getParent()->setRight(NULL);
+                  node->setParent(NULL);
+                }
+              }
+              else {
+                node = NULL;
+              }
+              //delete node;
+            }
+            //case 1: 1 child
+            else if (node->getLeft() != NULL && node->getRight() == NULL) {
+              //node->getLeft()->setParent(node->getParent());
+              if (node->getParent() != NULL) {
+                if (node->getLeft()->getKey() > node->getParent()->getKey()) {
+                  //std::cout << "in R-L " << std::endl;
+                  node->getParent()->setRight(node->getLeft());
+                  node->getLeft()->setParent(node->getParent());
+                }
+                else {
+                  //std::cout << "in L-L " << std::endl;
+                  node->getParent()->setLeft(node->getLeft());
+                  node->getLeft()->setParent(node->getParent());
+                }        
+                //delete node;
+                //node->setParent(NULL);
+                //node->setLeft(NULL);        
+              }
+            }
+            else if (node->getLeft() == NULL && node->getRight() != NULL) {
+              //node->getRight()->setParent(node->getParent());
+              if (node->getParent() != NULL) {
+                if (node->getRight()->getKey() < node->getParent()->getKey()) {
+                  //std::cout << "in L-R " << std::endl;
+                  node->getParent()->setLeft(node->getRight());
+                  node->getRight()->setParent(node->getParent());
+                }
+                else {
+                  //std::cout << "in R-R " << std::endl;
+                  node->getParent()->setRight(node->getRight());
+                  node->getRight()->setParent(node->getParent());
+                }
+                //delete node;
+                
+                //node->setParent(NULL);
+                //node->setRight(NULL);
+              }   
+            }
+            //case 2: 2 children
+            else {
+              AVLNode<Key, Value>* preNode = BinarySearchTree<Key, Value>::predecessor(node);
+              //swap with predecessor
+              nodeSwap(node, preNode);
+              if (node->getParent()->getLeft() == node) {
+                node->getParent()->setLeft(NULL);
+                node->setParent(NULL);
+              }
+              else {
+                node->getParent()->setRight(NULL);
+                node->setParent(NULL);
+              }
+              //delete node;
+            }
+          //delete node;
+          return;
+        }
+        else if (key < node->getKey()) {
+            if (node->getLeft() == NULL) {
+                return;
+            }
+            node = node->getLeft();
+        }
+        else if (key > node->getKey()) {
+            if (node->getRight() == NULL) {
+                return;
+            }
+            node = node->getRight();
+        }
+    }*/
 }
 
 template<class Key, class Value>
