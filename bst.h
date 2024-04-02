@@ -248,6 +248,8 @@ protected:
 
     // Add helper functions here
     static Node<Key, Value>* successor(Node<Key, Value>* current);
+    int getHeight(Node<Key, Value>* node) const;
+    bool subtreeBalance(Node<Key, Value>* node) const;
 
 protected:
     Node<Key, Value>* root_;
@@ -768,10 +770,46 @@ template<typename Key, typename Value>
 bool BinarySearchTree<Key, Value>::isBalanced() const
 {
     // TODO
+  if (root_ == NULL) {
+		return true;
+	}
+  int leftHeight = getHeight(root_->getLeft());
+  int rightHeight = getHeight(root_->getRight());
+	if (leftHeight - rightHeight > 1 || rightHeight - leftHeight > 1) {
+		return false;
+	}
+  //return true;
 
+  return subtreeBalance(root_);
 }
 
+template<typename Key, typename Value>
+bool BinarySearchTree<Key, Value>::subtreeBalance(Node<Key, Value>* node) const
+{
+  if (node == NULL) {
+    return true;
+  }
 
+  int leftHeight = getHeight(node->getLeft());
+  int rightHeight = getHeight(node->getRight());
+	if (leftHeight - rightHeight > 1 || rightHeight - leftHeight > 1) {
+		return false;
+	}
+
+  if (node->getLeft() != NULL && node->getRight() != NULL) {
+		bool subtreeBalanced = subtreeBalance(node->getLeft()) && subtreeBalance(node->getRight());
+		return subtreeBalanced;
+	}
+  return true;
+}
+
+template<typename Key, typename Value>
+int BinarySearchTree<Key, Value>::getHeight(Node<Key, Value>* node) const {
+	if (node == NULL) {
+		return 0;
+	}
+	return 1 + std::max(getHeight(node->getLeft()), getHeight(node->getRight()));
+}
 
 template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::nodeSwap( Node<Key,Value>* n1, Node<Key,Value>* n2)
